@@ -1,3 +1,31 @@
 #index:
 #    path: /
 #    controller: App\Controller\DefaultController::index
+
+app_home:
+    path: /
+    controller: App\Controller\ArticleController::list
+
+app_create:
+    path: /create
+    controller: App\Controller\ArticleController::create
+
+app_show:
+    path: /show/{slug}
+    controller: App\Controller\ArticleController::show
+    requirements:
+      slug: '[a-z\-]+'
+
+app_update:
+    path: /update/{slug}
+    controller: App\Controller\ArticleController::update
+    requirements:
+      slug: '[a-z\-]+'
+
+app_delete:
+    path: /delete/{slug}
+    controller: App\Controller\ArticleController::delete
+    requirements:
+      slug: '[a-z\-]+'
+
+
