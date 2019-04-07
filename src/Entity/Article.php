@@ -43,22 +43,7 @@ class Article
      */
     private $updatedAt;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Commentaire", inversedBy="articles")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $commentaire;
 
-
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Commentaire", mappedBy="article")
-     */
-    private $commentaires;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="articles")
-     */
-    private $user;
 
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\Tag", mappedBy="articles")
@@ -76,10 +61,23 @@ class Article
     private $nbViews;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="articlesPublisher")
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="articles")
      * @ORM\JoinColumn(nullable=false)
      */
     private $publisher;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Category", inversedBy="articles")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $category;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $likes;
+
+
 
     public function __construct()
     {
@@ -195,17 +193,6 @@ class Article
         return $this;
     }
 
-    public function getUser(): ?User
-    {
-        return $this->user;
-    }
-
-    public function setUser(?User $user): self
-    {
-        $this->user = $user;
-
-        return $this;
-    }
 
     /**
      * @return Collection|Tag[]
@@ -271,4 +258,27 @@ class Article
         return $this;
     }
 
+    public function getCategory(): ?Category
+    {
+        return $this->category;
+    }
+
+    public function setCategory(?Category $category): self
+    {
+        $this->category = $category;
+
+        return $this;
+    }
+
+    public function getLikes(): ?int
+    {
+        return $this->likes;
+    }
+
+    public function setLikes(?int $likes): self
+    {
+        $this->likes = $likes;
+
+        return $this;
+    }
 }

@@ -19,10 +19,6 @@ class User
      */
     private $id;
 
-    /**
-     * @ORM\Column(type="string", length=64)
-     */
-    private $publisher;
 
     /**
      * @ORM\Column(type="string", length=64)
@@ -44,20 +40,42 @@ class User
      */
     private $isEnabled;
 
+
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Article", mappedBy="user")
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $articles;
+    private $image_src;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $image_alt;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $likes;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Commentaire", mappedBy="user")
+     */
+    private $commentaires;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $username;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Article", mappedBy="publisher")
      */
-    private $articlesPublisher;
+    private $articles;
 
     public function __construct()
     {
+
+        $this->commentaires = new ArrayCollection();
         $this->articles = new ArrayCollection();
-        $this->articlesPublisher = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -115,6 +133,87 @@ class User
         return $this;
     }
 
+
+
+    public function getImageSrc(): ?string
+    {
+        return $this->image_src;
+    }
+
+    public function setImageSrc(?string $image_src): self
+    {
+        $this->image_src = $image_src;
+
+        return $this;
+    }
+
+    public function getImageAlt(): ?string
+    {
+        return $this->image_alt;
+    }
+
+    public function setImageAlt(?string $image_alt): self
+    {
+        $this->image_alt = $image_alt;
+
+        return $this;
+    }
+
+    public function getLikes(): ?int
+    {
+        return $this->likes;
+    }
+
+    public function setLikes(?int $likes): self
+    {
+        $this->likes = $likes;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Commentaire[]
+     */
+    public function getCommentaires(): Collection
+    {
+        return $this->commentaires;
+    }
+
+    public function addCommentaire(Commentaire $commentaire): self
+    {
+        if (!$this->commentaires->contains($commentaire)) {
+            $this->commentaires[] = $commentaire;
+            $commentaire->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCommentaire(Commentaire $commentaire): self
+    {
+        if ($this->commentaires->contains($commentaire)) {
+            $this->commentaires->removeElement($commentaire);
+            // set the owning side to null (unless already changed)
+            if ($commentaire->getUser() === $this) {
+                $commentaire->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getUsername(): ?string
+    {
+        return $this->username;
+    }
+
+    public function setUsername(string $username): self
+    {
+        $this->username = $username;
+
+        return $this;
+    }
+
     /**
      * @return Collection|Article[]
      */
@@ -127,7 +226,7 @@ class User
     {
         if (!$this->articles->contains($article)) {
             $this->articles[] = $article;
-            $article->setUser($this);
+            $article->setPublisher($this);
         }
 
         return $this;
@@ -138,55 +237,8 @@ class User
         if ($this->articles->contains($article)) {
             $this->articles->removeElement($article);
             // set the owning side to null (unless already changed)
-            if ($article->getUser() === $this) {
-                $article->setUser(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getPublisher()
-    {
-        return $this->publisher;
-    }
-
-    /**
-     * @param mixed $publisher
-     */
-    public function setPublisher($publisher): void
-    {
-        $this->publisher = $publisher;
-    }
-
-    /**
-     * @return Collection|Article[]
-     */
-    public function getArticlesPublisher(): Collection
-    {
-        return $this->articlesPublisher;
-    }
-
-    public function addArticlesPublisher(Article $articlesPublisher): self
-    {
-        if (!$this->articlesPublisher->contains($articlesPublisher)) {
-            $this->articlesPublisher[] = $articlesPublisher;
-            $articlesPublisher->setPublisher($this);
-        }
-
-        return $this;
-    }
-
-    public function removeArticlesPublisher(Article $articlesPublisher): self
-    {
-        if ($this->articlesPublisher->contains($articlesPublisher)) {
-            $this->articlesPublisher->removeElement($articlesPublisher);
-            // set the owning side to null (unless already changed)
-            if ($articlesPublisher->getPublisher() === $this) {
-                $articlesPublisher->setPublisher(null);
+            if ($article->getPublisher() === $this) {
+                $article->setPublisher(null);
             }
         }
 
